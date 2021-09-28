@@ -17,11 +17,13 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded=[];
+    // protected $fillable = [
+    //     'username',
+    //     'name',
+    //     'email',
+    //     'password'
+    // ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -44,5 +46,11 @@ class User extends Authenticatable
     public function posts(){
         return $this->hasMany(Post::class);
     }
+
+     //Eloquent Mutator
+     public function setPasswordAttribute($password)
+     {
+        $this->attributes['password']= bcrypt($password);
+     }
 }
 

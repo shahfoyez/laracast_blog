@@ -10,18 +10,18 @@ use App\Http\Controllers\Controller;
 class PostController extends Controller
 {
     public function index(){
-        // dd(request(['search']));
+        // dd(request(['category']));
         // dd(request()->only('search'));
-        return view('posts',[
-            'posts'=> Post::latest()->filter(request(['search']))->get(), //->with('category','author'), use when we dont have Eager Load Relationships on an Existing Model
-            'categories'=>Category::all()
+        return view('posts.index',[
+            'posts'=> Post::latest()->filter(request(['search','category','author']))->paginate(6)->withQueryString(), //simplePaginate(6)
+            //->with('category','author'), use when we dont have Eager Load Relationships on an Existing Model
+            'CurrentCategory'=> Category::firstWhere('slug', request('category'))
         ]);
     }
     public function show(Post $post){
         // $post= Post::all(); //If no model Binding
-        return view('post',[
-            'post'=> $post,
-            'categories'=>Category::all()
+        return view('posts.show',[
+            'post'=> $post
         ]);
     }
 }

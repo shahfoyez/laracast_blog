@@ -19,15 +19,46 @@ class Post extends Model
         // }else{
         //      dd("no search");
         // }
-        $query->when($filters['search'] ?? false, function($query, $search){
-            $query->where('title','like','%'.$search.'%')
-                  ->orWhere('body','like','%'.$search.'%');
-        });
+
+        //Search Second Concept
+        $query->when($filters['search'] ?? false, fn($query, $search)=>
+            $query->where(fn($query)=>
+                $query->where('title','like','%'.$search.'%')
+                  ->orWhere('body','like','%'.$search.'%')
+            )
+        );
+
+        //Category
+        $query->when($filters['category'] ?? false, fn($query, $category)=>
+
+            // dd($category);
+            //WhereHas Concept
+            $query->whereHas('category', fn($query)=>
+                 $query->where('slug', $category)
+            )
+
+            //WhereExists Concept
+            // $query->whereExists(fn($query)=>
+            //     $query->from('categories')
+            //             ->whereColumn('categories.id', 'posts.id')
+            //             ->where('categories.slug', $category)
+            // );
+        );//Category Ends
+
+        //Author filtering
+        $query->when($filters['author'] ?? false, fn($query, $author)=>
+            $query->whereHas('author', fn($query)=>
+                 $query->where('username', $author)
+            )
+        );// Author Ends
+
+        //Search first concept
         // if($filter['search'] ?? true){
         //     $query->where('title','like','%'.request('search').'%')
         //         ->orWhere('body','like','%'.request('search').'%');
         // }
-    }
+    }//ScopeFilter Ends
+
     public function category(){
         return $this->belongsTo(Category::class);
     }
