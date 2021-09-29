@@ -9,7 +9,7 @@ class Post extends Model
 {
     use HasFactory;
     protected $guarded=[];
-    protected $with=['category', 'author'];
+    protected $with=['category', 'author']; //Eager loading for solving n+1 problem
     // protected $fillable=['title','excerpt','body'];
 
     public function scopeFilter($query, array $filters){ //$query is query builder pass by laravel

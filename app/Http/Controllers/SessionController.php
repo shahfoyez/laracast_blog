@@ -23,22 +23,21 @@ class SessionController extends Controller
         ]);
 
         // attempt to authenticate
-        // attempt() does both signing session and check email  and password match
+        // attempt() does both signing session and check email and password match
         if(!auth()->attempt($attributes)){
-            // auth failed
+            // if auth failed
             // technique 1
             throw ValidationException::withMessages([
                 'error'=>'Your credential did not match.'
-            ]); //returns current input
+            ]); //automaticlt returns current input
 
             // technique 2
             // return back()
             //     ->withInput()  // manually return current input
             //     ->withErrors(['error'=>'Your credential did not match.']);
         }
+        session->regenerate(); // session fixation
 
-        session->regenerate();// session fixation
-
-        return redirect('/')->with('success', 'You are loged In'); //wirh value assign in session
+        return redirect('/')->with('success', 'You are loged In'); //with value assign in session
    }
 }

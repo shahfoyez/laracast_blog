@@ -46,7 +46,6 @@ class User extends Authenticatable
     public function posts(){
         return $this->hasMany(Post::class);
     }
-
      //Eloquent Mutator
      public function setPasswordAttribute($password)
      {

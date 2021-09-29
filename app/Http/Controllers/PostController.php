@@ -13,8 +13,8 @@ class PostController extends Controller
         // dd(request(['category']));
         // dd(request()->only('search'));
         return view('posts.index',[
-            'posts'=> Post::latest()->filter(request(['search','category','author']))->paginate(6)->withQueryString(), //simplePaginate(6)
-            //->with('category','author'), use when we dont have Eager Load Relationships on an Existing Model
+            'posts'=> Post::latest()->filter(request(['search','category','author']))->paginate(6)->withQueryString(), //simplePaginate(6) //withQueryString for current input
+            //->with('category','author'), use when we don't have Eager Load Relationships on an Existing Model
             'CurrentCategory'=> Category::firstWhere('slug', request('category'))
         ]);
     }
