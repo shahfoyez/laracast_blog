@@ -62,8 +62,11 @@ class Post extends Model
     public function category(){
         return $this->belongsTo(Category::class);
     }
-    public function author(){   //user_id foreign key
+    public function author(){   //by default author_id fk, parameter passed user_id as foreign key
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function comments(){   //user_id foreign key
+        return $this->hasMany(Comment::class);
     }
 
     /**
