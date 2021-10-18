@@ -16,7 +16,7 @@ class SessionController extends Controller
     }
     public function store(){
         // validate the request
-        // returns current input
+        // validate() returns current input
         $attributes=request()->validate([
             'email'=> 'required|email',
             'password'=> 'required'
@@ -26,17 +26,18 @@ class SessionController extends Controller
         // attempt() does both signing session and check email and password match
         if(!auth()->attempt($attributes)){
             // if auth failed
+
             // technique 1
             throw ValidationException::withMessages([
                 'error'=>'Your credential did not match.'
-            ]); //automaticlt returns current input
+            ]); //automaticly returns current input
 
             // technique 2
             // return back()
-            //     ->withInput()  // manually return current input
+            //     ->withInput()  //manually return current input
             //     ->withErrors(['error'=>'Your credential did not match.']);
         }
-        session->regenerate(); // session fixation
+        session()->regenerate(); //session fixation
 
         return redirect('/')->with('success', 'You are loged In'); //with value assign in session
    }

@@ -2,23 +2,44 @@
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Category;
+use App\Services\Newsletter;
+use MailchimpMarketing\ApiClient;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SessionController;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 use App\Http\Controllers\RegisterController;
+use Illuminate\Validation\ValidationException;
 use phpDocumentor\Reflection\Types\Collection;
+use App\Http\Controllers\PostCommentsController;
 use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Php;
 
+Route::post('newsletter', function(Newsletter $newsletter){  //Instance Injecting/Automatic Resolution
+    $validation= request()->validate([
+        'email' => 'required|email'
+    ]);
+    try{
+        $newsletter->subscribe(request()->email);
+    }catch(Exception $e){
+        throw ValidationException::withMessages([
+            'email' => 'This email could not be added.'
+        ]);
+    }
+    return redirect('/')->with('success', 'You have subscribed to our newsletter');
+});
+
 Route::get('/', [PostController::class, 'index']);
-Route::get('/posts/{post}', [PostController::class, 'show']);
+Route::get('posts/{post}', [PostController::class, 'show']);
+Route::post('posts/{post:slug}/comments', [PostCommentsController::class, 'storeComment']);
 
-Route::get('/register', [RegisterController::class, 'create'])->middleware('guest');
-Route::post('/register', [RegisterController::class, 'store'])->middleware('guest');
 
-Route::post('/logout', [SessionController::class, 'destroy'])->middleware('auth');
-Route::get('/login', [SessionController::class, 'create'])->middleware('guest');
-Route::post('/sessions', [SessionController::class, 'store'])->middleware('guest');
+
+Route::get('register', [RegisterController::class, 'create'])->middleware('guest');
+Route::post('register', [RegisterController::class, 'store'])->middleware('guest');
+
+Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
+Route::get('login', [SessionController::class, 'create'])->middleware('guest');
+Route::post('sessions', [SessionController::class, 'store'])->middleware('guest');
 
 
 

@@ -30,6 +30,6 @@ class RegisterController extends Controller
 
         session()->flash('success', 'Your account has been created');
 
-        return redirect('/'); //->with('success', 'Your account has been created') use insted of session flash
+        return redirect('/'); //->with('success', 'Your account has been created') //use insted of session flash
     }
 }
