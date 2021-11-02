@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PostCommentsController;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
@@ -20,9 +21,12 @@ class PostController extends Controller
         ]);
     }
     public function show(Post $post){
-        // $post= Post::all(); //If no model Binding
+        // $post= Post::all(); //If no model Binding/injection
         return view('posts.show',[
             'post'=> $post
         ]);
+    }
+    public function create(Post $post){
+        return view('posts.create');
     }
 }

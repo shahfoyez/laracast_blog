@@ -9,24 +9,13 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SessionController;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\NewsLetterController;
 use Illuminate\Validation\ValidationException;
 use phpDocumentor\Reflection\Types\Collection;
 use App\Http\Controllers\PostCommentsController;
 use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Php;
 
-Route::post('newsletter', function(Newsletter $newsletter){  //Instance Injecting/Automatic Resolution
-    $validation= request()->validate([
-        'email' => 'required|email'
-    ]);
-    try{
-        $newsletter->subscribe(request()->email);
-    }catch(Exception $e){
-        throw ValidationException::withMessages([
-            'email' => 'This email could not be added.'
-        ]);
-    }
-    return redirect('/')->with('success', 'You have subscribed to our newsletter');
-});
+Route::post('newsletter', NewsLetterController::class); //Single action controller, invoke method
 
 Route::get('/', [PostController::class, 'index']);
 Route::get('posts/{post}', [PostController::class, 'show']);
@@ -40,6 +29,7 @@ Route::post('register', [RegisterController::class, 'store'])->middleware('guest
 Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
 Route::get('login', [SessionController::class, 'create'])->middleware('guest');
 Route::post('sessions', [SessionController::class, 'store'])->middleware('guest');
+Route::get('admin/posts/create', [PostController::class, 'create'])->middleware('admin');
 
 
 
